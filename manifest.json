@@ -4,7 +4,7 @@
   "version": "0.0.0.1",
   "description": "A baby step.",
   "browser_action": {
-    "default_icon": "image/icon.png",
+    "default_icon": "image/logo.png",
     "default_popup": "popup.html",
     "default_title": "Hi, you may want to check build status!"	
   },
@@ -17,5 +17,5 @@
     "page": "options.html",
     "chrome_style": true
   },
-  "icons": { "256": "image/icon.png" }
+  "icons": { "256": "image/logo.png" }
 }

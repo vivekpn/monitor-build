@@ -2,10 +2,15 @@
 <html>
   <head>
     <title>Getting Started Extension's Popup</title>
+	<script src="lib/jquery.min.js"></script>
+	<script src="js/build-result-finder.js"></script>
+	<link rel="stylesheet" href="css/popup.css">	
   </head>
+  
   <body>
-	<div>
-		<p>Hello Chrome!</p>
+	<div class="main-division">
+		<p>The build status for <span id="buildURL"><span></p>
+		<div id='status'>LOADING...</div>
 	</div>
   </body>
 </html>

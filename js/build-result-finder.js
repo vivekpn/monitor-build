@@ -17,7 +17,15 @@ var getStateOfBuild = function(buildURL){
 }
 
 $( document ).ready(function() {
-	var buildURL = "https://slabnode368.netact.nsn-rdnet.net/jenkins/job/ison_product_15.5_integration";
-	document.getElementById("buildURL").innerText = buildURL;
-	getStateOfBuild(buildURL);
+	var buildURL = null;
+	chrome.storage.sync.get("buildURL", function(items) {
+		if(items.buildURL){
+			buildURL = items.buildURL;
+			document.getElementById("buildURL").href = buildURL;
+			document.getElementById("buildURL").innerText = buildURL;		
+			getStateOfBuild(buildURL);
+		} else{
+			document.getElementById("information").innerText = "Please configure a right URL in the options.";
+		}
+	});
 });

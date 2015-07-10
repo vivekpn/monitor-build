@@ -1,6 +1,6 @@
 // Saves options to chrome.storage.sync.
 function save_options() {
-  var build_url = document.getElementById('build_url').value;
+  var build_url = document.getElementById('buildURL').value;
   chrome.storage.sync.set({
     buildURL: build_url,
   }, function() {
@@ -16,11 +16,10 @@ function save_options() {
 // Restores select box and checkbox state using the preferences
 // stored in chrome.storage.
 function restore_options() {
-  // Use default value buildURL = '<Enter the Build URL>'.
-  chrome.storage.sync.get({
-    buildURL: '<Enter the Build URL>',
-  }, function(items) {
-    document.getElementById('build_url').value = items.buildURL;
+  chrome.storage.sync.get("buildURL", function(items) {
+	if(items.buildURL){
+		document.getElementById('buildURL').value = items.buildURL;
+	}
   });
 }
 document.addEventListener('DOMContentLoaded', restore_options);

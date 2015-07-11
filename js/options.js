@@ -13,7 +13,7 @@ var save_options = function() {
         status.textContent = 'Options saved.';
         setTimeout(function () {
             status.textContent = '';
-        }, 750);
+        }, 1500);
     });
 };
 
@@ -24,26 +24,22 @@ var restore_options = function() {
         if (items.buildURLs) {
             console.log(items.buildURLs);
             for(index in items.buildURLs){
-                createNewInputField(items.buildURLs[index]);
+                _createNewInputField(items.buildURLs[index]);
             }
-            createNewInputField();
         }
+        _createNewInputField();
     });
 };
 
-document.addEventListener('DOMContentLoaded',
-    restore_options);
 $(document).ready(function () {
-    //restore_options();
-    //createNewInputField();
+    restore_options();
     $('#input_url_form').submit(function() {
         save_options();
-        createNewInputField();
         return false;
     });
 
     $(".add").click(function() {
-        createNewInputField();
+        _createNewInputField();
         return false;
     });
 
@@ -54,7 +50,7 @@ $(document).ready(function () {
 //document.getElementById('save').addEventListener('click',
 //    save_options);
 
-var createNewInputField = function(value){
+var _createNewInputField = function(value){
     var $inputField = $('#input_template').clone(true).removeClass('template').removeAttr('id');
     $inputField.find('input').val(value)
     $inputField.insertBefore("#input_url_form > .add");

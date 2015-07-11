@@ -1,17 +1,27 @@
 
 var getStateOfBuild = function (buildURL) {
+    var storedValue = JSON.parse(localStorage.getItem(buildURL));
+    if(storedValue){
+        processResponse(storedValue);
+        return;
+    }
+    fetchResponseAndProcess(buildURL);
+};
+
+var fetchResponseAndProcess = function (buildURL) {
     var xhr = new XMLHttpRequest();
     xhr.open("GET", buildURL + "/lastCompletedBuild/api/json", true);
     xhr.onerror = function () {
-        console.log("Error while fetching",buildURL);
+        console.log("Error while fetching", buildURL);
     };
     xhr.onload = function () {
-        console.log("Loaded...",buildURL);
+        console.log("Loaded...", buildURL);
         var response = JSON.parse(xhr.responseText);
         processResponse(response);
+        localStorage.setItem(buildURL, JSON.stringify(response));
     };
     xhr.onprogress = function () {
-        console.log("In Progress...",buildURL);
+        console.log("In Progress...", buildURL);
     };
     xhr.send();
 };
@@ -29,29 +39,38 @@ var processResponse = function (response) {
     $("#buld_information_table").append($row);
 };
 
-$(document).ready(function () {
-    chrome.storage.sync.get("buildURLs", function (items) {
-        if (items.buildURLs) {
-            var buildURLs = items.buildURLs;
-            for(var index in buildURLs){
-                getStateOfBuild(buildURLs[index]);
-            }
-        } else{
+var getFromChromeStorage = function(key, callback) {
+    chrome.storage.sync.get(key, function (items) {
+        if (items[key]) {
+            var value = items[key];
+            callback(value);
+        } else {
             console.log("Build URL is not stored")
+        }
+    });
+};
+
+$(document).ready(function () {
+    $('#refresh_table_button').on('click',function(){
+        $('#buld_information_table > tbody').empty();
+        getFromChromeStorage("buildURLs", function (buildURLs) {
+            for (var index in buildURLs) {
+                fetchResponseAndProcess(buildURLs[index]);
+            }
+        });
+    });
+    getFromChromeStorage("buildURLs", function (buildURLs) {
+        for (var index in buildURLs) {
+            getStateOfBuild(buildURLs[index]);
         }
     });
 });
 
 var getTimeFromTimestamp = function(timestamp){
     var date = new Date(timestamp*1000);
-// hours part from the timestamp
     var hours = date.getHours();
-// minutes part from the timestamp
     var minutes = "0" + date.getMinutes();
-// seconds part from the timestamp
     var seconds = "0" + date.getSeconds();
-
-// will display time in 10:30:23 format
     var formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
     return date;
 };

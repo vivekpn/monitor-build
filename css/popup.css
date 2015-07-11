@@ -1,3 +1,7 @@
 .main-division {
 	width:450px;
 }
+
+.empty_row {
+    display: none;
+}

@@ -50,7 +50,7 @@ var processResponse = function (response) {
     buildDetails.example_build_name=response.fullDisplayName;
     buildDetails.example_status=response.result;
     buildDetails.example_time= getTimeFromTimestamp(response.timestamp);
-    for (key in buildDetails) {
+    for (var key in buildDetails) {
         $row = $row.replace(key, buildDetails[key]);
     }
     $("#buld_information_table").append($row);

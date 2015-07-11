@@ -48,7 +48,7 @@ var restore_options = function() {
     chrome.storage.sync.get("buildURLs", function (items) {
         if (items.buildURLs) {
             console.log(items.buildURLs);
-            for(index in items.buildURLs){
+            for(var index in items.buildURLs){
                 _createNewInputField(items.buildURLs[index]);
             }
         }

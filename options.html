@@ -1,17 +1,26 @@
 <!DOCTYPE html>
 <html>
-	<head>
-	  <title>Right values will take you to the right build!</title>
-	  <style>
-		body: { padding: 10px; }
-	  </style>
-	</head>
+<head>
+    <title>Right values will take you to the right build!</title>
+    <script src="lib/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/options.css"/>
+</head>
 
-	<body>	
-	  Build URL:
-	  <input type = 'text' id='buildURL' name="buildURL" placeholder="Enter a link for Jenkins build job"/>
-	  <div id="status"></div>
-	  <button id="save">Save</button>
-	  <script src="js/options.js"></script>
-	</body>
+<body>
+Build URLs:
+<form id="input_url_form">
+    <p class="add">
+        <span >Add fields</span>
+    </p>
+    <input type="submit">
+</form>
+<div id="status"></div>
+<!--<button>Save</button>-->
+<p id='input_template' class="template" >
+    <input type='url' class="buildURL"
+           placeholder="Enter a link for Jenkins build job"/>
+    <span class="remove">Remove</span>
+</p>
+<script src="js/options.js"></script>
+</body>
 </html>

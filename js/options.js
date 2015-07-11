@@ -1,27 +1,62 @@
 // Saves options to chrome.storage.sync.
-function save_options() {
-  var build_url = document.getElementById('buildURL').value;
-  chrome.storage.sync.set({
-    buildURL: build_url,
-  }, function() {
-    // Update status to let user know options were saved.
-    var status = document.getElementById('status');
-    status.textContent = 'Options saved.';
-    setTimeout(function() {
-      status.textContent = '';
-    }, 750);
-  });
-}
+var save_options = function() {
+    var buildURLs =[];
+    $('#input_url_form > p > input[type="url"]').each(function(){
+        buildURLs.push(this.value);
+    });
+    console.log(buildURLs);
+    chrome.storage.sync.set({
+        buildURLs: buildURLs
+    }, function () {
+        // Update status to let user know options were saved.
+        var status = document.getElementById('status');
+        status.textContent = 'Options saved.';
+        setTimeout(function () {
+            status.textContent = '';
+        }, 750);
+    });
+};
 
 // Restores select box and checkbox state using the preferences
 // stored in chrome.storage.
-function restore_options() {
-  chrome.storage.sync.get("buildURL", function(items) {
-	if(items.buildURL){
-		document.getElementById('buildURL').value = items.buildURL;
-	}
-  });
-}
-document.addEventListener('DOMContentLoaded', restore_options);
-document.getElementById('save').addEventListener('click',
-    save_options);
+var restore_options = function() {
+    chrome.storage.sync.get("buildURLs", function (items) {
+        if (items.buildURLs) {
+            console.log(items.buildURLs);
+            for(index in items.buildURLs){
+                createNewInputField(items.buildURLs[index]);
+            }
+            createNewInputField();
+        }
+    });
+};
+
+document.addEventListener('DOMContentLoaded',
+    restore_options);
+$(document).ready(function () {
+    //restore_options();
+    //createNewInputField();
+    $('#input_url_form').submit(function() {
+        save_options();
+        createNewInputField();
+        return false;
+    });
+
+    $(".add").click(function() {
+        createNewInputField();
+        return false;
+    });
+
+    $(".remove").click(function() {
+        $(this).parent().remove();
+    });
+});
+//document.getElementById('save').addEventListener('click',
+//    save_options);
+
+var createNewInputField = function(value){
+    var $inputField = $('#input_template').clone(true).removeClass('template').removeAttr('id');
+    $inputField.find('input').val(value)
+    $inputField.insertBefore("#input_url_form > .add");
+    return $inputField;
+};

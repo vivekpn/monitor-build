@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Monitor Build!",
-  "version": "0.0.0.1",
+  "version": "0.1.0.1",
   "description": "A baby step.",
   "browser_action": {
     "default_icon": "image/logo.png",

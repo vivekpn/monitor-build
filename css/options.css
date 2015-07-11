@@ -1,0 +1,12 @@
+body {
+  padding: 10px;
+}
+
+
+.template{
+  display: none;
+}
+
+.buildURL{
+    width: 250px;
+}

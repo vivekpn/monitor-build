@@ -1,28 +1,34 @@
 <!doctype html>
 <html>
-  <head>
+<head>
     <title>Check the build status</title>
-	<script src="lib/jquery.min.js"></script>
-	<script src="js/build-result-finder.js"></script>
-	<link rel="stylesheet" href="css/popup.css">
-  </head>
-  
-  <body>
-	<div id="build_information" class="main-division">
+    <script src="lib/jquery.min.js"></script>
+    <script src="js/build-result-finder.js"></script>
+    <link rel="stylesheet" href="css/popup.css">
+</head>
+
+<body>
+<div id="build_information" class="main-division">
     <table id="buld_information_table" style="width:100%">
+        <thead>
         <tr>
             <td>Build Name</td>
             <td>Last Build Status</td>
             <td>Last Build Time</td>
         </tr>
-        <tr id = "row_template" class = "empty_row">
-            <td class="build_name" ><a href="example_website" target="_blank">example_build_name</a></td>
-            <td class="last_build_status">example_status</td>
-            <td class="last_build_time">example_time</td>
-        </tr>
+        </thead>
     </table>
-    </div>
-  </body>
+</div>
+<table id="row_template" class="template">
+    <tbody>
+    <tr>
+        <td class="build_name"><a href="example_website" target="_blank">example_build_name</a></td>
+        <td class="last_build_status">example_status</td>
+        <td class="last_build_time">example_time</td>
+    </tr>
+    </tbody>
+</table>
+</body>
 </html>
 
 

@@ -1,3 +1,20 @@
+"use strict";
+
+$(document).ready(function () {
+    $('#refresh_table_button').on('click',function(){
+        $('#buld_information_table > tbody').empty();
+        getFromChromeStorage("buildURLs", function (buildURLs) {
+            for (var index in buildURLs) {
+                fetchResponseAndProcess(buildURLs[index]);
+            }
+        });
+    });
+    getFromChromeStorage("buildURLs", function (buildURLs) {
+        for (var index in buildURLs) {
+            getStateOfBuild(buildURLs[index]);
+        }
+    });
+});
 
 var getStateOfBuild = function (buildURL) {
     var storedValue = JSON.parse(localStorage.getItem(buildURL));
@@ -50,27 +67,6 @@ var getFromChromeStorage = function(key, callback) {
     });
 };
 
-$(document).ready(function () {
-    $('#refresh_table_button').on('click',function(){
-        $('#buld_information_table > tbody').empty();
-        getFromChromeStorage("buildURLs", function (buildURLs) {
-            for (var index in buildURLs) {
-                fetchResponseAndProcess(buildURLs[index]);
-            }
-        });
-    });
-    getFromChromeStorage("buildURLs", function (buildURLs) {
-        for (var index in buildURLs) {
-            getStateOfBuild(buildURLs[index]);
-        }
-    });
-});
-
 var getTimeFromTimestamp = function(timestamp){
-    var date = new Date(timestamp*1000);
-    var hours = date.getHours();
-    var minutes = "0" + date.getMinutes();
-    var seconds = "0" + date.getSeconds();
-    var formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
-    return date;
+    return new Date(timestamp*1000);
 };

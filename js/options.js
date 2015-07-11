@@ -1,3 +1,24 @@
+"use strict";
+
+$(document).ready(function () {
+    $('#input_url_form').submit(function() {
+        save_options();
+        return false;
+    });
+
+    $(".add").click(function() {
+        _createNewInputField();
+        return false;
+    });
+
+    $(".remove").click(function() {
+        $(this).parent().remove();
+    });
+
+    restore_options();
+
+});
+
 // Saves options to chrome.storage.sync.
 var save_options = function() {
     var buildURLs =[];
@@ -35,27 +56,6 @@ var restore_options = function() {
     });
 };
 
-$(document).ready(function () {
-    $('#input_url_form').submit(function() {
-        save_options();
-        return false;
-    });
-
-    $(".add").click(function() {
-        _createNewInputField();
-        return false;
-    });
-
-    $(".remove").click(function() {
-        $(this).parent().remove();
-    });
-
-    restore_options();
-
-});
-//document.getElementById('save').addEventListener('click',
-//    save_options);
-
 var _createNewInputField = function(value){
     var $inputField = $('#input_template').clone(true).removeClass('template').removeAttr('id');
     var $input = $inputField.find('input');
@@ -63,7 +63,6 @@ var _createNewInputField = function(value){
     $input[0].oninvalid = function(){
         changeSubmitStatus("Submit failed. Error in one or more fields.");
     };
-//    $input[0].onchange=function(){try{setCustomValidity('')}catch(e){}};
     $inputField.insertBefore("#input_url_form > .add");
     return $inputField;
 };

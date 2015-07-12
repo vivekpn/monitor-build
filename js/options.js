@@ -22,7 +22,7 @@ $(document).ready(function () {
 // Saves options to chrome.storage.sync.
 var save_options = function() {
     var buildURLs =[];
-    $('#input_url_form > p > input[type="url"]').each(function(){
+    $('#input_url_form').find('p > input[type="url"]').each(function(){
         buildURLs.push(this.value);
     });
     console.log(buildURLs);
@@ -39,7 +39,7 @@ var changeSubmitStatus = function(text){
     $status.text(text);
     setTimeout(function () {
         $status.text('');
-    }, 1500);
+    }, 2500);
 };
 
 // Restores select box and checkbox state using the preferences

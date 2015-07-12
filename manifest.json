@@ -2,24 +2,33 @@
   "manifest_version": 2,
   "name": "Monitor Build!",
   "version": "0.1.0.1",
-
   "description": "The easy way to keep your CI green!",
-  "icons": { "256": "image/logo.png" },
-
+  "icons": {
+    "256": "image/logo.png"
+  },
   "browser_action": {
     "default_icon": "image/logo.png",
     "default_popup": "popup.html",
-    "default_title": "Hi, you may want to check build status!"	
+    "default_title": "Hi, you may want to check build status!"
   },
-
-  "author":"Vivek",
+  "author": "Vivek",
   "homepage_url": "https://github.com/vivekpn/monitor-build",
   "permissions": [
-          "storage","http://*/","https://*/"
-        ],
+    "alarms",
+    "storage",
+    "http://*/",
+    "https://*/",
+    "notifications",
+    "tabs"
+  ],
+  "background": {
+    "scripts": [
+      "js/eventPage.js"
+    ],
+    "persistent": false
+  },
   "options_ui": {
     "page": "options.html",
     "chrome_style": true
   }
-
 }

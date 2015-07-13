@@ -15,7 +15,7 @@ $(document).ready(function () {
         $(this).parent().remove();
     });
 
-    restore_options();
+    getFromUserSettings("buildURLs", restore_options);
 
 });
 
@@ -44,16 +44,17 @@ var changeSubmitStatus = function(text){
 
 // Restores select box and checkbox state using the preferences
 // stored in chrome.storage.
-var restore_options = function() {
-    chrome.storage.sync.get("buildURLs", function (items) {
-        if (items.buildURLs) {
-            console.log(items.buildURLs);
-            for(var index in items.buildURLs){
-                _createNewInputField(items.buildURLs[index]);
+var restore_options = function(buildURLs) {
+        if (buildURLs) {
+            console.log("URLs stored: ",buildURLs);
+            for(var index = 0; index<buildURLs.length; index++){
+                if(!buildURLs[index]){
+                    continue;
+                }
+                _createNewInputField(buildURLs[index]);
             }
         }
         _createNewInputField();
-    });
 };
 
 var _createNewInputField = function(value){
@@ -65,4 +66,10 @@ var _createNewInputField = function(value){
     };
     $inputField.insertBefore("#input_url_form > .add");
     return $inputField;
+};
+
+var getFromUserSettings = function (key, callback) {
+    chrome.runtime.sendMessage({event: "getUserSettings", key: key}, function (value) {
+        callback(value);
+    });
 };

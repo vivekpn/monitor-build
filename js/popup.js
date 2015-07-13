@@ -3,13 +3,13 @@
 $(document).ready(function () {
     $('#refresh_table_button').on('click', function () {
         $('#buld_information_table').find('tbody').empty();
-        getFromChromeStorage("buildURLs", function (buildURLs) {
+        getFromUserSettings("buildURLs", function (buildURLs) {
             buildURLs.forEach(function (buildURL) {
-                fetchAndProcess(buildURL);
+                fetchAndProcessResponse(buildURL);
             });
         });
     });
-    getFromChromeStorage("buildURLs", function (buildURLs) {
+    getFromUserSettings("buildURLs", function (buildURLs) {
         buildURLs.forEach(function (buildURL) {
             getStateOfBuild(buildURL);
         });
@@ -22,37 +22,35 @@ var getStateOfBuild = function (buildURL) {
         processResponse(storedValue);
         return;
     }
-    fetchAndProcess(buildURL);
+    fetchAndProcessResponse(buildURL);
 };
 
-var fetchAndProcess = function (buildURL) {
-    chrome.runtime.sendMessage({event: "fetch", buildURL: buildURL}, function (response) {
-        processResponse(response);
+var fetchAndProcessResponse = function (buildURL) {
+    chrome.runtime.sendMessage({event: "fetchBuildDetails", buildURL: buildURL}, function (buildInformation) {
+        processResponse(buildInformation);
     });
 };
 
-
-var processResponse = function (response) {
+var processResponse = function (buildInformation) {
     var $row = $("#row_template").clone(true).html();
     var buildDetails = {};
-    buildDetails.example_website = response.url;
-    buildDetails.example_build_name = response.fullDisplayName;
-    buildDetails.example_status = response.result;
-    buildDetails.example_time = getTimeFromTimestamp(response.timestamp);
+    var response = buildInformation.response;
+    buildDetails.example_website = response['url'];
+    buildDetails.example_build_name = response['fullDisplayName'];
+    buildDetails.example_status = response['result'];
+    buildDetails.example_time = getTimeFromTimestamp(response['timestamp']);
     for (var key in buildDetails) {
+        if (!buildDetails.hasOwnProperty(key)) {
+            continue;
+        }
         $row = $row.replace(key, buildDetails[key]);
     }
     $("#buld_information_table").append($row);
 };
 
-var getFromChromeStorage = function (key, callback) {
-    chrome.storage.sync.get(key, function (items) {
-        if (items[key]) {
-            var value = items[key];
-            callback(value);
-        } else {
-            console.log("Build URL is not stored")
-        }
+var getFromUserSettings = function (key, callback) {
+    chrome.runtime.sendMessage({event: "getUserSettings", key: key}, function (value) {
+        callback(value);
     });
 };
 

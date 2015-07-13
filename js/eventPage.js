@@ -7,33 +7,36 @@ chrome.notifications.onClicked.addListener(function () {
 
 chrome.alarms.onAlarm.addListener(function callback(alarm) {
     console.log("Fetching the build status");
-    fetchResponse();
+    var buildURLs = getUserSettings("buildURLs",fetchResponse);
     //var message = "Your attention please";
     //showNotification(message);
 });
-chrome.alarms.create("Build status poller", {when: Date.now(), periodInMinutes: 2});
+
+chrome.alarms.create("Build status poller", {when: Date.now(), periodInMinutes: 1});
 
 chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
         var event = request.event;
         if (event == "fetchBuildDetails") {
-            localStorage.setItem('lastUpdated', new Date());
             fetchResponse(request.buildURL, sendResponse);
             return true;
         }
         if(event == 'getUserSettings'){
-            var key = request.key;
-            chrome.storage.sync.get(key, function (items) {
-                var value = items[key];
-                if (!value) {
-                    console.log(key, "is not stored");
-                    value = [];
-                }
-                sendResponse(value);
-            });
+            getUserSettings(request.key, sendResponse)
             return true;
         }
     });
+
+var getUserSettings = function(key, sendResponse){
+    chrome.storage.sync.get(key, function (items) {
+        var value = items[key];
+        if (!value) {
+            console.log(key, "is not stored");
+            value = [];
+        }
+        sendResponse(value);
+    });
+};
 
 var showNotification = function (message) {
     chrome.notifications.create('reminder', {
@@ -52,7 +55,7 @@ var fetchResponse = function (buildURL, callback) {
         console.log("Error while fetching", buildURL);
     };
     xhr.onload = function () {
-        console.log("Loaded...", buildURL);
+        console.log("Loaded response for...", buildURL);
         var buildInformation = {response:JSON.parse(xhr.responseText), lastUpdated:new Date()};
         localStorage.setItem(buildURL, JSON.stringify(buildInformation));
         if(callback) {

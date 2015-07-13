@@ -5,7 +5,7 @@ $(document).ready(function () {
         $('#buld_information_table').find('tbody').empty();
         getFromChromeStorage("buildURLs", function (buildURLs) {
             buildURLs.forEach(function (buildURL) {
-                fetchResponseAndProcess(buildURL);
+                fetchAndProcess(buildURL);
             });
         });
     });
@@ -14,7 +14,6 @@ $(document).ready(function () {
             getStateOfBuild(buildURL);
         });
     });
-    showNotification("HEllo");
 });
 
 var getStateOfBuild = function (buildURL) {
@@ -23,26 +22,15 @@ var getStateOfBuild = function (buildURL) {
         processResponse(storedValue);
         return;
     }
-    fetchResponseAndProcess(buildURL);
+    fetchAndProcess(buildURL);
 };
 
-var fetchResponseAndProcess = function (buildURL) {
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", buildURL + "/lastCompletedBuild/api/json", true);
-    xhr.onerror = function () {
-        console.log("Error while fetching", buildURL);
-    };
-    xhr.onload = function () {
-        console.log("Loaded...", buildURL);
-        var response = JSON.parse(xhr.responseText);
+var fetchAndProcess = function (buildURL) {
+    chrome.runtime.sendMessage({event: "fetch", buildURL: buildURL}, function (response) {
         processResponse(response);
-        localStorage.setItem(buildURL, JSON.stringify(response));
-    };
-    xhr.onprogress = function () {
-        console.log("In Progress...", buildURL);
-    };
-    xhr.send();
+    });
 };
+
 
 var processResponse = function (response) {
     var $row = $("#row_template").clone(true).html();

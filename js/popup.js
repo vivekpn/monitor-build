@@ -55,5 +55,5 @@ var getFromUserSettings = function (key, callback) {
 };
 
 var getTimeFromTimestamp = function (timestamp) {
-    return new Date(timestamp * 1000);
+    return new Date(timestamp);
 };

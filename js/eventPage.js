@@ -1,18 +1,22 @@
-"use strict"
+"use strict";
 
-
-chrome.notifications.onClicked.addListener(function () {
-    launch();
+chrome.notifications.onClicked.addListener(function ( notificationId,  byUser) {
+    launchURLinNewTab(notificationId);
 });
 
-chrome.alarms.onAlarm.addListener(function callback(alarm) {
-    console.log("Fetching the build status");
-    var buildURLs = getUserSettings("buildURLs",fetchResponse);
-    //var message = "Your attention please";
-    //showNotification(message);
-});
+var createAlarmToPollData = function () {
+    chrome.alarms.onAlarm.addListener(function callback(alarm) {
+        console.log("Fetching the build status");
+        getUserSettings("buildURLs", function (buildURLs) {
+            for (var index = 0; index < buildURLs.length; index++) {
+                fetchResponse(buildURLs[index]);
+            }
+        });
+    });
+    chrome.alarms.create("Build status poller", {when: Date.now(), periodInMinutes: 1});
+};
 
-chrome.alarms.create("Build status poller", {when: Date.now(), periodInMinutes: 1});
+createAlarmToPollData();
 
 chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
@@ -22,7 +26,7 @@ chrome.runtime.onMessage.addListener(
             return true;
         }
         if(event == 'getUserSettings'){
-            getUserSettings(request.key, sendResponse)
+            getUserSettings(request.key, sendResponse);
             return true;
         }
     });
@@ -38,11 +42,11 @@ var getUserSettings = function(key, sendResponse){
     });
 };
 
-var showNotification = function (message) {
-    chrome.notifications.create('reminder', {
+var showUserNotification = function (id,title,message) {
+    chrome.notifications.create(id, {
         type: 'basic',
         iconUrl: 'image/logo.png',
-        title: 'A build is broken.',
+        title: title,
         message: message
     }, function (notificationId) {
     });
@@ -61,6 +65,17 @@ var fetchResponse = function (buildURL, callback) {
         if(callback) {
             callback(buildInformation);
         }
+        var storedBuildInformation = JSON.parse(localStorage.getItem(buildURL));
+        if(!storedBuildInformation ){
+            var title = buildInformation.response['fullDisplayName']+" status is now available.";
+            var message = "The current status is "+ buildInformation.response['result'];
+            showUserNotification(buildURL,title ,message);
+        }
+        else if(storedBuildInformation.response['result']!=buildInformation.response['result']){
+            var title = buildInformation.response['fullDisplayName']+" status is changed.";
+            var message = storedBuildInformation.response['result']+" is changed to "+ buildInformation.response['result'];
+            showUserNotification(buildURL,title ,message);
+        }
     };
     xhr.onprogress = function () {
         console.log("In Progress...", buildURL);
@@ -68,7 +83,7 @@ var fetchResponse = function (buildURL, callback) {
     xhr.send();
 };
 
-function launch() {
-    chrome.tabs.create({url: 'popup.html'}, function () {
+var launchURLinNewTab = function (url) {
+    chrome.tabs.create({url: url}, function () {
     });
-}
+};

@@ -61,7 +61,6 @@ var fetchResponse = function (buildURL, callback) {
     xhr.onload = function () {
         console.log("Loaded response for...", buildURL);
         var buildInformation = {response:JSON.parse(xhr.responseText), lastUpdated:new Date()};
-        localStorage.setItem(buildURL, JSON.stringify(buildInformation));
         if(callback) {
             callback(buildInformation);
         }
@@ -76,6 +75,7 @@ var fetchResponse = function (buildURL, callback) {
             var message = storedBuildInformation.response['result']+" is changed to "+ buildInformation.response['result'];
             showUserNotification(buildURL,title ,message);
         }
+        localStorage.setItem(buildURL, JSON.stringify(buildInformation));
     };
     xhr.onprogress = function () {
         console.log("In Progress...", buildURL);

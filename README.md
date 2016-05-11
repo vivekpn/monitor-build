@@ -1,6 +1,6 @@
 # Monitor Build
 
-It is a chrome extension. Currently it supports Jenkins. With the help of this extension, it is easier to monitor the build status. Any change in the status of the configured builds will be notified to you as a chrome notification.
+It is a chrome extension. Currently it supports Jenkins. With the help of this extension, it is easier to monitor the build status. Any change in the status of the configured builds will be automatically notified to you.
 
 ##Few screenshots:
 * A simple UI to see the status of the build on click of the extension. 

@@ -4,10 +4,10 @@
   "version": "0.1.0.1",
   "description": "The easy way to keep your CI green!",
   "icons": {
-    "256": "image/logo.png"
+    "256": "images/logo.png"
   },
   "browser_action": {
-    "default_icon": "image/logo.png",
+    "default_icon": "images/logo.png",
     "default_popup": "popup.html",
     "default_title": "Hi, you may want to check build status!"
   },

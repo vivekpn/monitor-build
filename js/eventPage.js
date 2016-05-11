@@ -45,7 +45,7 @@ var getUserSettings = function(key, sendResponse){
 var showUserNotification = function (id,title,message) {
     chrome.notifications.create(id, {
         type: 'basic',
-        iconUrl: 'image/logo.png',
+        iconUrl: 'images/logo.png',
         title: title,
         message: message
     }, function (notificationId) {
